@@ -1,0 +1,38 @@
+name: Deploy React App
+
+on:
+  push:
+    branches:
+      - main  # Producción
+      - pre   # Preproducción
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 22.14
+      
+      - name: Install dependencies
+        run: npm install
+      
+      - name: Build project
+        run: |
+          if [ "$GITHUB_REF_NAME" == "main" ]; then
+            npm run build
+          else
+            npm run build
+          fi
+      
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: build
+          path: dist/
+
+          
